@@ -1,17 +1,24 @@
 ---
 
 - name: Install exim4
-  include: install.yml
-  tags: ['exim4-sendonly-install']
+  include_tasks: 
+    file: install.yml
+    apply:
+      tags: ['exim4-sendonly-install']
 
 - name: Configure exim4
-  include: configure.yml
-  tags: ['exim4-sendonly-configure']
+  include_tasks:
+    file: configure.yml
+    apply:
+      tags: ['exim4-sendonly-configure']
 
 - name: Setup aws ses
-  include: aws_ses.yml
+  include_tasks:
+    file: aws_ses.yml
+    apply:
+      tags: ['exim4-sendonly-configure']
   when: exim4_aws_access_key_id != '' and exim4_aws_secret_access_key != ''
-  tags: ['exim4-sendonly-configure']
+  
 
 - name: Start exim4
   service:
